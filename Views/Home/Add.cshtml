@@ -1,0 +1,63 @@
+﻿@model Homework_SkillTree.Models.HomeViewModel
+@{
+    ViewData["Title"] = "新增記帳";
+}
+<div class="container mt-4">
+    <div class="card bg-light">
+        <div class="card-body">
+            <form action="/Home/Add" method="post">
+                @Html.AntiForgeryToken()
+                <div class="text-danger">
+                    @Html.ValidationSummary(true)
+                </div>
+
+                <div class="row mb-3">
+                    <label for="Category" class="col-sm-2 col-form-label">類別</label>
+                    <div class="col-sm-10">
+                        <select id="Category" name="Category" class="form-select">
+                            <option value="" selected="@(string.IsNullOrEmpty(Model.Category) ? "selected" : null)">請選擇</option>
+                            <option value="1" selected="@(Model.Category == "1" ? "selected" : null)">收入</option>
+                            <option value="0" selected="@(Model.Category == "0" ? "selected" : null)">支出</option>
+                        </select>
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.Category)</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="Money" class="col-sm-2 col-form-label">金額</label>
+                    <div class="col-sm-10">
+                        <input type="number" id="Money" name="Money" class="form-control" placeholder="金額" value="@(Model.Money != 0 ? Model.Money.ToString() : "")">
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.Money)</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="CreateDate" class="col-sm-2 col-form-label">日期</label>
+                    <div class="col-sm-10">
+                        <input type="date" id="CreateDate" name="CreateDate" class="form-control" value="@Model.CreateDate.ToString("yyyy-MM-dd")">
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.CreateDate)</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="Description" class="col-sm-2 col-form-label">備註</label>
+                    <div class="col-sm-10">
+                        <textarea id="Description" name="Description" class="form-control" rows="3">@Model.Description</textarea>
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.Description)</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-10 offset-sm-2">
+                        <button type="submit" class="btn btn-primary">送出</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
