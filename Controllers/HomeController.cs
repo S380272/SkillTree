@@ -1,47 +1,48 @@
 using System.Diagnostics;
-using Homework_SkillTree.Data;
-
-using Homework_SkillTree.Data;
 using Homework_SkillTree.Models;
 using Homework_SkillTree.Models.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Homework_SkillTree.Services;
 
 namespace Homework_SkillTree.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly SkillTreeContext _skillTreeContext;
+        private readonly IAccountBookService _accountBookService;
 
-        public HomeController(SkillTreeContext skillTreeContext,
+        public HomeController(IAccountBookService accountBookService,
                               ILogger<HomeController> logger)
         {
+            _accountBookService = accountBookService;
             _logger = logger;
-            _skillTreeContext = skillTreeContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            var data = await _skillTreeContext.Homework1s.ToListAsync();
-
-            // ±N∏ÍÆ∆ÆwπÍ≈È¬‡¥´¨∞µ¯πœº“´¨
-            var viewModels = data.Select(h => new HomeViewModel
+            // ÂÖàÂèñÂæóÊâÄÊúâË®òÂ∏≥Ë≥áÊñô
+            var allItems = await _accountBookService.GetAllAsync();
+            var totalCount = allItems.Count;
+            const int pageSize = 10;
+            var pagedItems = allItems
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var result = new PagedResult<HomeViewModel>
             {
-                Category = h.Category,
-                Money = h.Money,
-                CreateDate = h.CreateDate,
-                Description = h.Description
-            }).ToList();
-
-            return View(viewModels);
+                Items = pagedItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
+            return View(result);
         }
 
 
         [HttpGet]
         public IActionResult Add()
         {
-            // ™¶^§@≠”∑s™∫ HomeViewModel πÍ®“°Aπw≥]∑Ì´e§È¥¡
             return View(new HomeViewModel());
         }
 
@@ -50,22 +51,11 @@ namespace Homework_SkillTree.Controllers
         {
             if (ModelState.IsValid)
             {
-                // ±N ViewModel ∏ÍÆ∆¬‡¥´¨∞∏ÍÆ∆ÆwπÍ≈È
-                var homework = new Homework1
-                {
-                    Category = model.Category,
-                    Money = model.Money,
-                    CreateDate = model.CreateDate,
-                    Description = model.Description ?? string.Empty
-                };
-
-                _skillTreeContext.Homework1s.Add(homework);
-                await _skillTreeContext.SaveChangesAsync();
+                await _accountBookService.AddAsync(model);
 
                 return RedirectToAction(nameof(Index));
             }
 
-            // ¶p™G≈Á√“•¢±—°A™¶^µ¯πœ®√´OØdøÈ§J™∫º∆æ⁄
             return View(model);
         }
 

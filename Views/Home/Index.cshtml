@@ -1,4 +1,5 @@
-@model List<Homework_SkillTree.Models.HomeViewModel>
+@model Homework_SkillTree.Services.PagedResult<Homework_SkillTree.Models.HomeViewModel>
+@using Homework_SkillTree.Services
 
 @{
     ViewData["Title"] = "Home Page";
@@ -24,10 +25,8 @@
                 </tr>
             </thead>
             <tbody>
-                @{
-                    int index = 1;
-                }
-                @foreach (var item in Model)
+                @{ int index = (Model.PageNumber - 1) * Model.PageSize + 1; }
+                @foreach (var item in Model.Items)
                 {
                     <tr>
                         <td>@(index++)</td>
@@ -38,6 +37,23 @@
                 }
             </tbody>
         </table>
+        <!-- 分頁導航 -->
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.PageNumber - 1 })">上一頁</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = i })">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = Model.PageNumber + 1 })">下一頁</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 </div>
