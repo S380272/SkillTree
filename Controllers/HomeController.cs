@@ -4,6 +4,8 @@ using Homework_SkillTree.Models.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Homework_SkillTree.Services;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace Homework_SkillTree.Controllers
 {
@@ -19,24 +21,16 @@ namespace Homework_SkillTree.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(int pageNumber = 1)
+        public async Task<IActionResult> Index(int page = 1)
         {
-            // 先取得所有記帳資料
-            var allItems = await _accountBookService.GetAllAsync();
-            var totalCount = allItems.Count;
             const int pageSize = 10;
-            var pagedItems = allItems
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-            var result = new PagedResult<HomeViewModel>
-            {
-                Items = pagedItems,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalCount = totalCount
-            };
-            return View(result);
+            var allItems = await _accountBookService.GetAllAsync();
+
+
+            // 分頁
+            IPagedList<HomeViewModel> pagedList = allItems.OrderByDescending(v => v.CreateDate)
+                                                 .ToPagedList(page, pageSize);
+            return View(pagedList);
         }
 
 
