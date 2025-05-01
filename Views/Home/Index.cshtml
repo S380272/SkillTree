@@ -1,9 +1,9 @@
-@model List<Homework_SkillTree.Models.HomeViewModel>
-
+@model X.PagedList.IPagedList<Homework_SkillTree.Models.HomeViewModel>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Extensions;
 @{
     ViewData["Title"] = "Home Page";
 }
-
 
 <div class="row mt-4">
     <div class="row mb-3">
@@ -14,30 +14,36 @@
         </div>
     </div>
     <div class="col-md-12">
-        <table class="table table-bordered table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>類別</th>
-                    <th>日期</th>
-                    <th>金額</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int index = 1;
-                }
-                @foreach (var item in Model)
-                {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
                     <tr>
-                        <td>@(index++)</td>
-                        <td>@(item.Category == "1" ? "收入" : "支出")</td>
-                        <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
-                        <td>@item.Money.ToString("N0")</td>
+                        <th>#</th>
+                        <th>類別</th>
+                        <th>日期</th>
+                        <th>金額</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{ int index = Model.FirstItemOnPage; }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(index++)</td>
+                            <td>@(item.Category == "1" ? "收入" : "支出")</td>
+                            <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                            <td>@item.Money.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- 分頁導航 -->
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
+        {
+            UlElementClasses = new[] { "pagination", "justify-content-center" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" }
+        })
     </div>
-</div>
 </div>

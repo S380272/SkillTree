@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// µù¥U DbContext
-builder.Services.AddDbContext<SkillTreeContext>(options =>
+// ï¿½ï¿½ï¿½U DbContext
+builder.Services.AddDbContext<MyBlogContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("SkillTreeDatabase")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<Homework_SkillTree.Services.IAccountBookService, Homework_SkillTree.Services.AccountBookService>();
 
 var app = builder.Build();
 
