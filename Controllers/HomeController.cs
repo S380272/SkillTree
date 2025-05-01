@@ -20,7 +20,6 @@ namespace Homework_SkillTree.Controllers
             _accountBookService = accountBookService;
             _logger = logger;
         }
-
         public async Task<IActionResult> Index(int page = 1)
         {
             const int pageSize = 10;
