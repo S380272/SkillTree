@@ -7,7 +7,6 @@ using Homework_SkillTree.Services;
 using X.PagedList;
 using X.PagedList.Extensions;
 
-
 namespace Homework_SkillTree.Controllers
 {
     public class HomeController : Controller
@@ -21,8 +20,6 @@ namespace Homework_SkillTree.Controllers
             _accountBookService = accountBookService;
             _logger = logger;
         }
-
-
         public async Task<IActionResult> Index(int page = 1)
         {
             const int pageSize = 10;
