@@ -45,6 +45,7 @@ namespace Homework_SkillTree.Controllers
             if (ModelState.IsValid)
             {
                 await _accountBookService.AddAsync(model);
+                await _accountBookService.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }

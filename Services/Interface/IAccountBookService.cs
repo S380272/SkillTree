@@ -9,4 +9,6 @@ public interface IAccountBookService
     Task<List<Homework_SkillTree.Models.HomeViewModel>> GetAllAsync();
 
     Task AddAsync(HomeViewModel model);
+
+    Task SaveChangesAsync();
 }
