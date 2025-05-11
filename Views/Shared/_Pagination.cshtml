@@ -1,0 +1,12 @@
+﻿@model X.PagedList.IPagedList
+
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Extensions;
+
+@Html.PagedListPager(Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+        new { page }), new PagedListRenderOptions
+    {
+        UlElementClasses = new[] { "pagination", "justify-content-center" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })

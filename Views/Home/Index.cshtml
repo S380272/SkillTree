@@ -26,7 +26,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{ int index = Model.FirstItemOnPage; }
+                    @{
+                        int index = Model.FirstItemOnPage;
+                    }
                     @foreach (var item in Model)
                     {
                         <tr>
@@ -39,12 +41,8 @@
                 </tbody>
             </table>
         </div>
-        <!-- 分頁導航 -->
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
-        {
-            UlElementClasses = new[] { "pagination", "justify-content-center" },
-            LiElementClasses = new[] { "page-item" },
-            PageClasses = new[] { "page-link" }
-        })
+        <!-- 使用 Partial View -->
+        @await Html.PartialAsync("_Pagination", Model)
     </div>
 </div>
+
