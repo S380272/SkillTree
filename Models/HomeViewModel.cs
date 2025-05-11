@@ -16,6 +16,7 @@ namespace Homework_SkillTree.Models
 
         [Required(ErrorMessage = "請選擇日期")]
         [DataType(DataType.Date)]
+        [CustomValidation(typeof(HomeViewModel), nameof(ValidateDate))]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "日期")]
         public DateTime CreateDate { get; set; } = DateTime.Today;
@@ -23,5 +24,14 @@ namespace Homework_SkillTree.Models
         [StringLength(100, ErrorMessage = "備註不可超過 100 個字")]
         [Display(Name = "備註")]
         public string? Description { get; set; }
+
+        public static ValidationResult ValidateDate(DateTime date, ValidationContext context)
+        {
+            if (date > DateTime.Today)
+            {
+                return new ValidationResult("日期不得大於今天");
+            }
+            return ValidationResult.Success;
+        }
     }
 }
