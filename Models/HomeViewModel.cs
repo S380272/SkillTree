@@ -21,6 +21,7 @@ namespace Homework_SkillTree.Models
         [Display(Name = "日期")]
         public DateTime CreateDate { get; set; } = DateTime.Today;
 
+        [Required(ErrorMessage = "請輸入備註")]
         [StringLength(100, ErrorMessage = "備註不可超過 100 個字")]
         [Display(Name = "備註")]
         public string? Description { get; set; }
