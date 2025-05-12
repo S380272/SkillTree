@@ -1,11 +1,7 @@
-using System.Diagnostics;
 using Homework_SkillTree.Models;
-using Homework_SkillTree.Models.DB;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Homework_SkillTree.Services;
-using X.PagedList;
-using X.PagedList.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Homework_SkillTree.Controllers
 {
@@ -20,15 +16,10 @@ namespace Homework_SkillTree.Controllers
             _accountBookService = accountBookService;
             _logger = logger;
         }
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
         {
-            const int pageSize = 10;
-            var allItems = await _accountBookService.GetAllAsync();
+            var pagedList = await _accountBookService.GetAllAsync(page, pageSize);
 
-
-            // 分頁
-            IPagedList<HomeViewModel> pagedList = allItems.OrderByDescending(v => v.CreateDate)
-                                                 .ToPagedList(page, pageSize);
             return View(pagedList);
         }
 

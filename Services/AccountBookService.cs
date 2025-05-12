@@ -3,6 +3,9 @@ using Homework_SkillTree.Data;
 using Homework_SkillTree.Models;
 using Homework_SkillTree.Models.DB;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
+using X.PagedList.EF;
+using X.PagedList.Extensions;
 
 public class AccountBookService : IAccountBookService
 {
@@ -13,9 +16,11 @@ public class AccountBookService : IAccountBookService
         _context = context;
     }
 
-    public async Task<List<HomeViewModel>> GetAllAsync()
+    public async Task<IPagedList<HomeViewModel>> GetAllAsync(int pageNumber, int pageSize)
     {
         return await _context.AccountBooks
+            .AsNoTracking()
+            .OrderByDescending(e => e.Dateee)
             .Select(e => new HomeViewModel
             {
                 Category = e.Categoryyy.ToString(),
@@ -23,7 +28,7 @@ public class AccountBookService : IAccountBookService
                 CreateDate = e.Dateee,
                 Description = string.IsNullOrWhiteSpace(e.Remarkkk) ? null : e.Remarkkk
             })
-            .ToListAsync();
+            .ToPagedListAsync(pageNumber, pageSize);
     }
 
     public async Task AddAsync(HomeViewModel model)
